@@ -1,0 +1,20 @@
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración del editor/IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de dependencias (si usaras Node.js en el futuro)
+node_modules/
+
+# Archivos de logs
+logs/
+*.log
+
+# Archivos de build (si usaras herramientas de empaquetado)
+dist/
+build/
