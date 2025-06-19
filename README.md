@@ -62,9 +62,9 @@ A continuación, se presentan ideas para futuras mejoras desde diferentes roles 
 - **Refactorización del Código JS:**
   - Modularizar el código: Separar la lógica de la interfaz (UI), la gestión de datos (estado) y las utilidades en diferentes archivos/módulos.
   - Considerar patrones de diseño (ej. Módulo, Observador) para una mejor organización.
-- **Framework/Librería Frontend:** Para funcionalidades más complejas y escalabilidad, evaluar la migración a un framework como Vue.js, React o Svelte. Esto facilitaría la gestión del estado, el enrutamiento y la componentización.
+- **Framework/Librería Frontend:** Para funcionalidades más complejas y escalabilidad, evaluar la migración a un framework como React, Vite o Nextjs. Esto facilitaría la gestión del estado, el enrutamiento y la componentización.
 - **Backend y Base de Datos:**
-  - Para persistencia robusta, multiusuario y funcionalidades avanzadas, desarrollar un backend (Node.js/Express, Python/Django, Ruby/Rails).
+  - Para persistencia robusta, multiusuario y funcionalidades avanzadas, desarrollar un backend (Node.js/supabase).
   - Utilizar una base de datos (PostgreSQL, MongoDB, Firebase Firestore).
 - **Pruebas (Testing):** Implementar pruebas unitarias (Jest, Vitest) para funciones críticas y pruebas E2E (Cypress, Playwright) para flujos de usuario.
 - **Build Tools:** Integrar herramientas como Vite, Webpack o Parcel para optimización de assets, transpilación de JS moderno y hot-reloading durante el desarrollo.
@@ -141,7 +141,7 @@ Este es un plan de trabajo sugerido, priorizando mejoras incrementales:
 - **[Dev]** Implementar un sistema de build (ej. Vite).
 - **[Dev]** Iniciar la escritura de pruebas unitarias para la lógica de negocio.
 
-### Continuo:
+### Continuo
 
 - **[Todos]** Documentar decisiones de diseño y código.
 - **[Todos]** Mantener el `.gitignore` actualizado.
