@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Turnos Pilates Reformer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .controls {
+        background: #f8f9fa;
+        padding: 20px;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .day-selector {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 15px;
+      }
+
+      .time-slot-selector {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .day-btn,
+      .time-slot-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        background: #6c757d;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .day-btn:hover,
+      .time-slot-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .day-btn.active {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+      }
+
+      .time-slot-btn.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .current-selection {
+        text-align: center;
+        margin: 15px 0;
+        padding: 10px;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      .edit-controls {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .edit-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .edit-btn.edit {
+        background: #28a745;
+        color: white;
+      }
+
+      .edit-btn.save {
+        background: #007bff;
+        color: white;
+      }
+
+      .edit-btn.cancel {
+        background: #dc3545;
+        color: white;
+      }
+
+      .edit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .schedule-grid {
+        padding: 20px;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        min-width: 800px;
+      }
+
+      th,
+      td {
+        padding: 15px 10px;
+        text-align: center;
+        border: 2px solid #dee2e6;
+        position: relative;
+        vertical-align: middle;
+      }
+
+      th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: bold;
+        font-size: 1.1em;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      td {
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+        min-height: 60px;
+        height: 60px;
+      }
+
+      td:hover {
+        background: #e3f2fd;
+        transform: scale(1.02);
+      }
+
+      .time-column {
+        background: linear-gradient(
+          135deg,
+          #4facfe 0%,
+          #00f2fe 100%
+        ) !important;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2em;
+        width: 120px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      .student-cell {
+        cursor: pointer;
+        position: relative;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .student-cell.editing input {
+        width: 100%;
+        border: 2px solid #007bff;
+        background: #fff3cd;
+        padding: 8px;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .student-info-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+      }
+
+      .attendance-check {
+        margin-right: 5px;
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+      }
+
+      .student-name-clickable {
+        cursor: pointer;
+        text-decoration: underline;
+        color: #007bff;
+      }
+      .student-name-clickable:hover {
+        color: #0056b3;
+      }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.5);
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 25px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      }
+      .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close-button:hover,
+      .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .empty-cell {
+        color: #6c757d;
+        font-style: italic;
+        opacity: 0.7;
+      }
+
+      .bed-header {
+        background: linear-gradient(
+          135deg,
+          #ff6b6b 0%,
+          #ee5a52 100%
+        ) !important;
+        width: 150px;
+      }
+
+      .student-name {
+        display: block;
+        font-weight: bold;
+        color: #2c3e50;
+        line-height: 1.3;
+        word-break: break-word;
+      }
+
+      .export-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-top: 2px solid #e9ecef;
+        text-align: center;
+      }
+
+      .export-btn {
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        margin: 0 10px;
+      }
+
+      .export-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .stats {
+        background: #e9ecef;
+        padding: 15px;
+        margin: 20px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .stats h3 {
+        color: #495057;
+        margin-bottom: 10px;
+      }
+
+      .stat-item {
+        display: inline-block;
+        margin: 0 15px;
+        padding: 8px 15px;
+        background: white;
+        border-radius: 15px;
+        font-weight: bold;
+        color: #495057;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          margin: 10px;
+          border-radius: 10px;
+        }
+
+        .header h1 {
+          font-size: 1.8em;
+        }
+
+        th,
+        td {
+          padding: 8px 4px;
+          font-size: 0.9em;
+        }
+
+        .day-btn,
+        .time-slot-btn {
+          padding: 8px 16px;
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🧘‍♀️ Turnos Pilates Reformer</h1>
+        <p>Sistema de horarios por horas - 6 camas disponibles</p>
+      </div>
+
+      <div class="controls">
+        <div class="day-selector">
+          <button class="day-btn active" onclick="showDay('lunes')">
+            Lunes
+          </button>
+          <button class="day-btn" onclick="showDay('martes')">Martes</button>
+          <button class="day-btn" onclick="showDay('miercoles')">
+            Miércoles
+          </button>
+          <button class="day-btn" onclick="showDay('jueves')">Jueves</button>
+          <button class="day-btn" onclick="showDay('viernes')">Viernes</button>
+        </div>
+
+        <div class="time-slot-selector">
+          <button
+            class="time-slot-btn active"
+            onclick="showTimeSlot('morning_afternoon_combined')"
+          >
+            🌅 Mañana y Tarde (08:00-15:00)
+          </button>
+          <button class="time-slot-btn" onclick="showTimeSlot('evening_combined')">
+            🌙 Tarde y Noche (16:00-21:00)
+          </button>
+        </div>
+
+        <div class="current-selection" id="currentSelection">
+          📅 Lunes - 🌅 Mañana (8:00-12:00)
+        </div>
+
+        <div class="edit-controls">
+          <button class="edit-btn edit" onclick="toggleEdit()">
+            ✏️ Editar Horarios
+          </button>
+          <button
+            class="edit-btn save"
+            onclick="saveChanges()"
+            style="display: none"
+          >
+            💾 Guardar Cambios
+          </button>
+          <button
+            class="edit-btn cancel"
+            onclick="cancelEdit()"
+            style="display: none"
+          >
+            ❌ Cancelar
+          </button>
+          <button class="edit-btn" onclick="clearCurrentSchedule()">
+            🗑️ Limpiar Turno
+          </button>
+          <button class="edit-btn" onclick="copySchedule()">
+            📋 Copiar Turno
+          </button>
+        </div>
+      </div>
+
+      <div class="stats" id="statsSection">
+        <!-- Las estadísticas se generarán dinámicamente -->
+      </div>
+
+      <div class="schedule-grid">
+        <table id="scheduleTable">
+          <!-- La tabla se generará dinámicamente -->
+        </table>
+      </div>
+
+      <div class="export-section">
+        <button class="export-btn" onclick="exportToJSON()">
+          📥 Exportar Datos (JSON)
+        </button>
+        <input
+          type="file"
+          id="importFile"
+          accept=".json"
+          style="display: none"
+          onchange="importFromJSON()"
+        />
+        <button
+          class="export-btn"
+          onclick="document.getElementById('importFile').click()"
+        >
+          📤 Importar Datos
+        </button>
+        <button class="export-btn" onclick="printSchedule()">
+          🖨️ Imprimir Horario
+        </button>
+      </div>
+    </div>
+
+    <!-- Student Details Modal -->
+    <div id="studentModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeStudentModal()">&times;</span>
+        <h2 id="modalStudentName">Detalles del Alumno</h2>
+        <p><strong>Profesor/a:</strong> <span id="modalProfessorName"></span></p>
+        <p><strong>Asistencia:</strong> <span id="modalAttendanceStatus"></span></p>
+        <label for="modalStudentNotes"><strong>Notas:</strong></label>
+        <textarea id="modalStudentNotes" rows="3" style="width: 100%; margin-top: 5px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+        <button onclick="saveStudentNotes()" style="margin-top: 10px; padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar Notas</button>
+      </div>
+    </div>
+
+    <script>
+      // Datos de horarios organizados por día y turno
+      let scheduleData = {
+        "lunes": {
+          "morning": {
+            "08:00 - 09:00": ["Florencia Ayala", "Claudia Bogarin", "Avelino", "Noelia", "Andrea", "Bianca"],
+            "09:00 - 10:00": ["Roxana Serra", "Claudia P", "Nora", "Carina F", "Patricia S", "Blanca"],
+            "10:00 - 11:00": ["Marta Lamuzzo", "Daniel", "Juan Carlos", "Silvia Amador", "Romina", "Cristina"],
+            "11:00 - 12:00": ["Silvia Juarez", "Yesica", "Florencia Cerbetto", "Morena Alonzo", "Verónica", "Lucia"]
+          },
+          "afternoon": {
+            "14:00 - 15:00": ["Alejandra", "Cecilia", "Abigail", "Adriana", "Adriana", "Gabriela"]
+          },
+          "evening": {
+            "16:00 - 17:00": ["Marcela Frutos", "Erika", "Elisabet", "Mariana P", "Adriana", "Silvia"],
+            "17:00 - 18:00": ["Fabiana", "Laura Jambin", "Maria del Rosario", "Karina", "Belen", "Julieta"],
+            "18:00 - 19:00": ["", "Lesley", "Graciela Valdez", "Gerldine", "Marcela", "Mariana Cecilia"],
+            "19:00 - 20:00": ["Carolina T", "Patricia", "Ester Moreno", "Victoria", "Assencion Camila", "Virginia"],
+            "20:00 - 21:00": ["Denis", "Claudia", "Alejandra R", "Liliana", "Veronica Ochoa", "Veronica"]
+          }
+        },
+        "martes": {
+          "morning": {
+            "08:00 - 09:00": ["Marcia Monjes", "Alicia Aracha", "Paula", "Florencia Alvarez", "Micaela", "Noelia"],
+            "09:00 - 10:00": ["Marisa Olmedo", "Patricia V", "Daniela", "Pamela", "Marcia", "Analia O."],
+            "10:00 - 11:00": ["Nilda Ibarra", "Judith", "Karla", "Ana", "Andrea", "Lucia"],
+            "11:00 - 12:00": ["Fanny", "Begonia", "Sara", "Silvana", "Monica Molinaro", "Agostina"]
+          },
+          "afternoon": {
+            "14:00 - 15:00": ["Alicia Casella", "Alicia Hidalgo", "Viviana", "Mónica", "Iris Alejandra", "Irene"]
+          },
+          "evening": {
+            "16:00 - 17:00": ["Patricia", "Martín", "Sofía", "Cristina T", "Ariel Tejerina", "Adriana"],
+            "17:00 - 18:00": ["Micaela", "Carolina", "Graciela Ruchi", "Gabriela", "Pilar Palazo", "Mama de Pilar"],
+            "18:00 - 19:00": ["Marcela Perez", "Carlos", "Adriana", "Carlos", "Valeria", "Maria Eugenia Melli"],
+            "19:00 - 20:00": ["Monica Rinaldi", "Mirta Rinaldi", "Maria Rosa", "Ana Maria", "Silvina H Abril", ""],
+            "20:00 - 21:00": ["Herminia", "Paiu", "Sergio", "Natacha", "Emma", "Giuliana"]
+          }
+        },
+        "miercoles": {
+          "morning": {
+            "08:00 - 09:00": ["Florencia", "Claudia", "Avelino", "Noelia", "Andrea", ""],
+            "09:00 - 10:00": ["Roxana S", "Claudia P", "Nora", "Carina F", "Patricia S", "Graciela C"],
+            "10:00 - 11:00": ["Gabriela F", "Marisa Robledo", "Claudia", "Jesica", "Romina", "Cristina"],
+            "11:00 - 12:00": ["Adriana", "Isabel", "Edith", "Mirta", "Belqui", "Blanca"]
+          },
+          "afternoon": {
+            "14:00 - 15:00": ["Alejandra", "Cecilia", "Abigail", "Adriana", "Adriana", "Nilda"]
+          },
+          "evening": {
+            "16:00 - 17:00": ["Patricia", "Martín", "Sofía", "Cristina T", "Morena A", "Veronica"],
+            "17:00 - 18:00": ["Fabiana Julieta", "Laura Jambrino", "Maria del Rosario", "Karina", "Belen", "Clari"],
+            "18:00 - 19:00": ["Mariana Cecilia", "Lezley", "Graciela Valdez", "Gerldine", "Natalia", "Aldana"],
+            "19:00 - 20:00": ["Carolina T", "Patricia", "Ester Moreno", "Victoria", "Assencion Camila", "Bianca"],
+            "20:00 - 21:00": ["Denis", "Claudia", "Alejandra R", "Liliana", "Veronica Ochoa", "Veronica"]
+          }
+        },
+        "jueves": {
+          "morning": {
+            "08:00 - 09:00": ["Marcia Monjes", "Alicia Aracha", "", "Florencia Alvarez", "Micaela", "Bianca"],
+            "09:00 - 10:00": ["Marisa O", "Patricia Viola", "Daniela", "Pamela", "Lucia", "Lucia Mariosini"],
+            "10:00 - 11:00": ["Marta Lamuzzo", "Daniel", "Juan Carlos", "Silvia Amador", "Judith", "Ana"],
+            "11:00 - 12:00": ["Silvia Juarez", "Jesica", "Florencia Cerbetto", "Silvana Rinaldi", "Monica M", "Fanny"]
+          },
+          "afternoon": {
+            "14:00 - 15:00": ["Alicia", "Alicia Hidalgo", "Viviana", "Mónica", "Iris Alejandra", "Irene"]
+          },
+          "evening": {
+            "16:00 - 17:00": ["Marcela Frutos", "Erika", "Elisabet", "Mariana P", "Adriana", "Silvia"],
+            "17:00 - 18:00": ["", "", "", "", "", ""],
+            "18:00 - 19:00": ["Marcela Perez", "Carlos", "Adriana", "Carlos", "Marcela", "Geaciela Ruchi"],
+            "19:00 - 20:00": ["Monica Rinaldi", "Mirta Rinaldi", "Maria Rosa", "Ana Maria", "Silvina H Abril", ""],
+            "20:00 - 21:00": ["Herminia", "Paiu", "Sergio", "Natacha", "Emma", "Eliana"]
+          }
+        },
+        "viernes": {
+          "morning": {
+            "08:00 - 09:00": ["Florencia", "Gabriela", "Avelino Claudio", "Noelia", "Analia O", "Silvia F"],
+            "09:00 - 10:00": ["Roxana Serra", "Claudia P", "Nora", "Carina F", "Maria", "Graciela C"],
+            "10:00 - 11:00": ["Nilda Ibarra", "Marisa Robledo", "Karla", "Claudia", "Romina", "Blanca"],
+            "11:00 - 12:00": ["Adriana", "Isabel", "Edith", "Mirta", "Belqui", "Begonia"]
+          },
+          "afternoon": {
+            "14:00 - 15:00": ["", "", "", "", "", ""]
+          },
+          "evening": {
+            "16:00 - 17:00": ["Patricia", "Martín", "Sofía", "Cristina T", "Morena A", "Veronica"],
+            "17:00 - 18:00": ["Micaela", "Carolina", "Elisabet", "Maria del Rosario", "Mariana Cecilia", "Clari"],
+            "18:00 - 19:00": ["Julieta", "Lesley Belen", "Bianca", "Aldana", "Valeria", "Maria Eugenia Melli"],
+            "19:00 - 20:00": ["Carolina T", "Patricia", "Ariel Tejerina", "Cecilia", "Juampi", "Virginia"],
+            "20:00 - 21:00": ["Denis", "Claudia", "Alejandra R", "Liliana", "Lucia", "Giuliana"]
+          }
+        }
+      };
+
+      let currentDay = "lunes";
+      let currentTimeSlot = "morning_afternoon_combined"; // Updated initial value
+      let isEditing = false;
+      let originalData = {};
+      let copiedSchedule = null;
+      let currentModalInfo = {}; // To store info for saving notes in modal
+
+      // Helper function to transform old data structure to new one
+      function transformScheduleData(data) {
+        const newData = {};
+        for (const day in data) {
+          newData[day] = {};
+          for (const category in data[day]) {
+            newData[day][category] = {};
+            for (const timeSlot in data[day][category]) {
+              const studentsArray = data[day][category][timeSlot];
+              newData[day][category][timeSlot] = {
+                professor: "Prof. Asignado", // Default professor
+                students: studentsArray.map(studentName => ({
+                  name: studentName || "",
+                  attended: false,
+                  notes: ""
+                }))
+              };
+            }
+          }
+        }
+        return newData;
+      }
+
+      // Check if scheduleData needs transformation (e.g. if it's in the old format)
+      // This is a simple check; more robust checks might be needed for varied old formats.
+      function isOldFormat(data) {
+        for (const day in data) {
+          for (const category in data[day]) {
+            for (const timeSlot in data[day][category]) {
+              // If a time slot directly contains an array, it's likely the old format.
+              if (Array.isArray(data[day][category][timeSlot])) {
+                return true;
+              }
+              return false; // Found a new format item, assume all is new.
+            }
+          }
+        }
+        return false; // Default to false if data is empty or structure is unexpected
+      }
+
+      if (isOldFormat(scheduleData)) {
+        console.log("Transforming schedule data to new format...");
+        scheduleData = transformScheduleData(scheduleData);
+      }
+
+      function getCategoryForTime(timeString) {
+        const startHour = parseInt(timeString.split(':')[0]);
+        if (startHour >= 8 && startHour < 12) return 'morning';
+        if (startHour >= 12 && startHour < 16) return 'afternoon'; // Original afternoon range (12-16)
+        if (startHour >= 16 && startHour < 22) return 'evening';   // Original evening range (16-22)
+        return null; 
+      }
+
+      // Generar horarios por horas
+      function generateTimeSlots(start, end) {
+        const slots = [];
+        for (let hour = start; hour < end; hour++) {
+          const from = hour.toString().padStart(2, "0") + ":00";
+          const to = (hour + 1).toString().padStart(2, "0") + ":00";
+          slots.push(`${from} - ${to}`);
+        }
+        return slots;
+      }
+
+      // Obtener horarios por turno
+      function getTimeSlotsForPeriod(period) {
+        switch (period) {
+          case "morning_afternoon_combined":
+            return generateTimeSlots(8, 12).concat(generateTimeSlots(14, 15)); // 08-12 and 14-15
+          case "evening_combined":
+            return generateTimeSlots(16, 21); // 16-21
+          default:
+            return [];
+        }
+      }
+
+      // Crear tabla
+      function createTable() {
+        const table = document.getElementById("scheduleTable");
+        const timeSlots = getTimeSlotsForPeriod(currentTimeSlot);
+
+        // Limpiar tabla
+        table.innerHTML = "";
+
+        // Crear encabezados
+        const headerRow = table.insertRow();
+        headerRow.insertCell().innerHTML = "<strong>Horario</strong>";
+        for (let i = 1; i <= 6; i++) {
+          const cell = headerRow.insertCell();
+          cell.innerHTML = `<strong>Cama ${i}</strong>`;
+          cell.className = "bed-header";
+        }
+
+        // Crear filas de horarios
+        timeSlots.forEach((time) => {
+          const row = table.insertRow();
+          const timeCell = row.insertCell();
+          timeCell.innerHTML = `<strong>${time}</strong>`;
+          timeCell.className = "time-column";
+
+          for (let bed = 1; bed <= 6; bed++) {
+            const cell = row.insertCell();
+            const category = getCategoryForTime(time);
+            
+            const slotData = scheduleData[currentDay]?.[category]?.[time];
+            const studentData = slotData?.students?.[bed - 1] || { name: "", attended: false, notes: "" };
+            const studentName = studentData.name;
+            const studentAttended = studentData.attended;
+
+            if (isEditing) {
+              cell.innerHTML = `<input type="text" value="${studentName}" onchange="updateCell('${time}', ${
+                bed - 1
+              }, this.value)" placeholder="Nombre del alumno">`;
+              cell.className = "student-cell editing";
+            } else {
+              if (studentName) {
+                const checkboxId = `att-${currentDay}-${category}-${time.replace(/[\s:-]/g, '')}-${bed-1}`;
+                cell.innerHTML = `
+                  <div class="student-info-container">
+                    <input type="checkbox" 
+                           class="attendance-check" 
+                           id="${checkboxId}"
+                           ${studentAttended ? "checked" : ""} 
+                           onchange="updateAttendance('${currentDay}', '${category}', '${time}', ${bed - 1}, this.checked)">
+                    <span class="student-name-clickable" onclick="openStudentModal('${currentDay}', '${category}', '${time}', ${bed - 1})">${studentName}</span>
+                  </div>`;
+              } else {
+                cell.innerHTML = '<span class="empty-cell">Disponible</span>';
+              }
+              cell.className = "student-cell";
+            }
+          }
+        });
+        updateStats();
+      }
+
+      // Actualizar celda
+      function updateCell(time, bedIndex, value) {
+        const category = getCategoryForTime(time);
+        if (!scheduleData[currentDay][category]) scheduleData[currentDay][category] = {};
+        if (!scheduleData[currentDay][category][time]) {
+            scheduleData[currentDay][category][time] = {
+                professor: "Prof. Asignado",
+                students: Array(6).fill(null).map(() => ({ name: "", attended: false, notes: "" }))
+            };
+        } else if (!scheduleData[currentDay][category][time].students) {
+             scheduleData[currentDay][category][time].students = Array(6).fill(null).map(() => ({ name: "", attended: false, notes: "" }));
+        }
+         if (!scheduleData[currentDay][category][time].students[bedIndex]) {
+            scheduleData[currentDay][category][time].students[bedIndex] = { name: "", attended: false, notes: "" };
+        }
+        scheduleData[currentDay][category][time].students[bedIndex].name = value.trim();
+      }
+
+      // Cambiar día
+      function showDay(day) {
+        currentDay = day;
+
+        // Actualizar botones de día
+        document.querySelectorAll(".day-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        updateCurrentSelection();
+        createTable();
+      }
+
+      // Cambiar turno
+      function showTimeSlot(timeSlot) {
+        currentTimeSlot = timeSlot;
+
+        // Actualizar botones de turno
+        document.querySelectorAll(".time-slot-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        updateCurrentSelection();
+        createTable();
+      }
+
+      // Actualizar selección actual
+      function updateCurrentSelection() {
+        const dayNames = {
+          lunes: "Lunes",
+          martes: "Martes",
+          miercoles: "Miércoles",
+          jueves: "Jueves",
+          viernes: "Viernes",
+        };
+
+        const timeNames = {
+          morning_afternoon_combined: "🌅 Mañana y Tarde (08:00-15:00)",
+          evening_combined: "🌙 Tarde y Noche (16:00-21:00)",
+        };
+
+        document.getElementById(
+          "currentSelection"
+        ).innerHTML = `📅 ${dayNames[currentDay]} - ${timeNames[currentTimeSlot]}`;
+      }
+
+      // Actualizar estadísticas
+      function updateStats() {
+        const timeSlots = getTimeSlotsForPeriod(currentTimeSlot);
+        let totalSlots = timeSlots.length * 6;
+        let occupiedSlots = 0;
+        let uniqueStudents = new Set();
+
+        timeSlots.forEach((time) => {
+          const category = getCategoryForTime(time);
+          const slotData = scheduleData[currentDay]?.[category]?.[time];
+          if (slotData && slotData.students) {
+            slotData.students.forEach((student) => {
+              if (student && student.name && student.name.trim()) {
+                occupiedSlots++;
+                uniqueStudents.add(student.name.trim().toLowerCase());
+              }
+            });
+          }
+        });
+        
+        // Ensure totalSlots is not zero to avoid NaN
+        totalSlots = totalSlots > 0 ? totalSlots : 1; 
+
+        const occupancyRate = ((occupiedSlots / totalSlots) * 100).toFixed(1);
+
+        document.getElementById("statsSection").innerHTML = `
+                <h3>📊 Estadísticas del Turno Actual</h3>
+                <span class="stat-item">👥 ${uniqueStudents.size} Alumnos únicos</span>
+                <span class="stat-item">📋 ${occupiedSlots}/${totalSlots} Turnos ocupados</span>
+                <span class="stat-item">📈 ${occupancyRate}% Ocupación</span>
+            `;
+      }
+
+      // Actualizar asistencia
+      function updateAttendance(day, category, time, bedIndex, isAttended) {
+        if (scheduleData[day]?.[category]?.[time]?.students?.[bedIndex]) {
+          scheduleData[day][category][time].students[bedIndex].attended = isAttended;
+          updateStats(); // Update stats after attendance change
+        } else {
+          console.error("Error updating attendance: Student data not found.", {day, category, time, bedIndex});
+        }
+      }
+
+
+      // Toggle edición
+      function toggleEdit() {
+        isEditing = !isEditing;
+        originalData = JSON.parse(JSON.stringify(scheduleData));
+
+        if (isEditing) {
+          document.querySelector(".edit-btn.edit").style.display = "none";
+          document.querySelector(".edit-btn.save").style.display =
+            "inline-block";
+          document.querySelector(".edit-btn.cancel").style.display =
+            "inline-block";
+        }
+
+        createTable();
+      }
+
+      // Guardar cambios
+      function saveChanges() {
+        isEditing = false;
+        document.querySelector(".edit-btn.edit").style.display = "inline-block";
+        document.querySelector(".edit-btn.save").style.display = "none";
+        document.querySelector(".edit-btn.cancel").style.display = "none";
+
+        createTable();
+        alert("✅ Cambios guardados correctamente");
+      }
+
+      // Cancelar edición
+      function cancelEdit() {
+        isEditing = false;
+        scheduleData = JSON.parse(JSON.stringify(originalData));
+
+        document.querySelector(".edit-btn.edit").style.display = "inline-block";
+        document.querySelector(".edit-btn.save").style.display = "none";
+        document.querySelector(".edit-btn.cancel").style.display = "none";
+
+        createTable();
+      }
+
+      // Limpiar horario actual
+      function clearCurrentSchedule() {
+        const dayName = currentDay.toUpperCase();
+        let timeSlotName = "";
+        if (currentTimeSlot === 'morning_afternoon_combined') {
+            timeSlotName = "MAÑANA Y TARDE (08:00-15:00)";
+        } else if (currentTimeSlot === 'evening_combined') {
+            timeSlotName = "TARDE Y NOCHE (16:00-21:00)";
+        }
+
+        if (
+          confirm(
+            `¿Estás seguro de que quieres limpiar todos los horarios de ${dayName} - ${timeSlotName}?`
+          )
+        ) {
+          const timeSlotsToClear = getTimeSlotsForPeriod(currentTimeSlot);
+          timeSlotsToClear.forEach(slot => {
+              const category = getCategoryForTime(slot);
+              if (scheduleData[currentDay]?.[category]?.[slot]) {
+                  scheduleData[currentDay][category][slot].students = new Array(6).fill(null).map(() => ({ name: "", attended: false, notes: "" }));
+                  // Optionally reset professor: scheduleData[currentDay][category][slot].professor = "Prof. Asignado";
+              } else if (scheduleData[currentDay]?.[category]) {
+                  scheduleData[currentDay][category][slot] = {
+                      professor: "Prof. Asignado",
+                      students: new Array(6).fill(null).map(() => ({ name: "", attended: false, notes: "" }))
+                  };
+              }
+          });
+          createTable();
+        }
+      }
+
+      // Copiar horario
+      function copySchedule() {
+        const dataToCopy = {};
+        const timeSlotsInView = getTimeSlotsForPeriod(currentTimeSlot);
+
+        timeSlotsInView.forEach(slot => {
+            const category = getCategoryForTime(slot);
+            const slotData = scheduleData[currentDay]?.[category]?.[slot];
+            if (slotData) {
+                dataToCopy[slot] = JSON.parse(JSON.stringify(slotData));
+            } else {
+                dataToCopy[slot] = {
+                    professor: "Prof. Asignado",
+                    students: new Array(6).fill(null).map(() => ({ name: "", attended: false, notes: "" }))
+                };
+            }
+        });
+
+        copiedSchedule = {
+          data: dataToCopy,
+        };
+
+        let timeSlotName = "";
+        if (currentTimeSlot === 'morning_afternoon_combined') {
+            timeSlotName = "MAÑANA Y TARDE (08:00-15:00)";
+        } else if (currentTimeSlot === 'evening_combined') {
+            timeSlotName = "TARDE Y NOCHE (16:00-21:00)";
+        }
+        alert(
+          `📋 Horario copiado: ${currentDay.toUpperCase()} - ${timeSlotName}`
+        );
+      }
+
+      // Exportar datos
+      function exportToJSON() {
+        const dataStr = JSON.stringify(scheduleData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "pilates_horarios_completo.json";
+        link.click();
+      }
+
+      // Importar datos
+      function importFromJSON() {
+        const file = document.getElementById("importFile").files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            try {
+              let importedData = JSON.parse(e.target.result);
+              if (isOldFormat(importedData)) { // Check if imported data is old format
+                importedData = transformScheduleData(importedData);
+              }
+              scheduleData = importedData;
+              createTable();
+              alert("✅ Datos importados correctamente");
+            } catch (error) {
+              alert("❌ Error al importar: archivo inválido");
+            }
+          };
+          reader.readAsText(file);
+        }
+      }
+
+      // Imprimir horario
+      function printSchedule() {
+        window.print();
+      }
+
+      // Modal functions
+      function openStudentModal(day, category, time, bedIndex) {
+        const slotData = scheduleData[day]?.[category]?.[time];
+        if (!slotData || !slotData.students || !slotData.students[bedIndex]) return;
+
+        const student = slotData.students[bedIndex];
+        const professor = slotData.professor || "No asignado";
+
+        if (!student || !student.name) return; // Don't open for empty slots
+
+        currentModalInfo = { day, category, time, bedIndex };
+
+        document.getElementById("modalStudentName").textContent = student.name;
+        document.getElementById("modalProfessorName").textContent = professor;
+        document.getElementById("modalAttendanceStatus").textContent = student.attended ? "Presente" : "Ausente";
+        document.getElementById("modalStudentNotes").value = student.notes || "";
+
+        document.getElementById("studentModal").style.display = "block";
+      }
+
+      function closeStudentModal() {
+        document.getElementById("studentModal").style.display = "none";
+        currentModalInfo = {};
+      }
+
+      function saveStudentNotes() {
+        const { day, category, time, bedIndex } = currentModalInfo;
+        if (day && scheduleData[day]?.[category]?.[time]?.students?.[bedIndex]) {
+          scheduleData[day][category][time].students[bedIndex].notes = document.getElementById("modalStudentNotes").value;
+          alert("Notas guardadas.");
+          closeStudentModal();
+        }
+      }
+
+      // Close modal if user clicks outside of it
+      window.onclick = function(event) {
+        const modal = document.getElementById("studentModal");
+        if (event.target == modal) {
+          closeStudentModal();
+        }
+      }
+
+      // Inicializar aplicación
+      document.addEventListener("DOMContentLoaded", function () {
+        updateCurrentSelection();
+        createTable();
+      });
+    </script>
+  </body>
+</html>
