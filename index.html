@@ -5,6 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Turnos Pilates Reformer</title>
     <style>
+      :root {
+        --body-bg-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --container-bg: white;
+        --container-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        --header-bg: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --header-text: white;
+        --controls-bg: #f8f9fa;
+        --controls-border: #e9ecef;
+        --text-color-default: #333;
+        --btn-bg: #6c757d;
+        --btn-text: white;
+        --btn-active-day-bg: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        --btn-active-timeslot-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --current-selection-bg: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        --current-selection-text: white;
+        --table-bg: white;
+        --table-border: #dee2e6;
+        --th-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --th-text: white;
+        --td-bg: #f8f9fa;
+        --td-hover-bg: #e3f2fd;
+        --time-column-bg: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --time-column-text: white;
+        --student-name-text: #2c3e50;
+        --student-name-clickable-text: #007bff;
+        --student-name-clickable-hover-text: #0056b3;
+        --empty-cell-text: #6c757d;
+        --modal-content-bg: #fefefe;
+        --modal-text: #333;
+        --input-editing-bg: #fff3cd;
+        --input-editing-border: #007bff;
+        --input-editing-text: #333;
+        --stats-bg: #e9ecef;
+        --stats-header-text: #495057;
+        --stat-item-bg: white;
+        --stat-item-text: #495057;
+        --export-section-bg: #f8f9fa;
+        --export-section-border: #e9ecef;
+        --bed-header-bg: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        --export-btn-bg: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        --edit-btn-edit-bg: #28a745;
+        --edit-btn-save-bg: #007bff;
+        --edit-btn-cancel-bg: #dc3545;
+        --edit-btn-text: white;
+        --theme-toggle-btn-bg: #555;
+        --theme-toggle-btn-text: white;
+        --theme-toggle-btn-hover-bg: #777;
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -13,23 +62,73 @@
 
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--body-bg-color);
         min-height: 100vh;
         padding: 20px;
+        color: var(--text-color-default);
+      }
+
+      body.dark-mode {
+        --body-bg-color: linear-gradient(135deg, #2c3e50 0%, #4a6a8a 100%);
+        --container-bg: #2d3748;
+        --container-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        --header-bg: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        --header-text: #e2e8f0;
+        --controls-bg: #1a202c;
+        --controls-border: #4a5568;
+        --text-color-default: #e2e8f0;
+        --btn-bg: #4a5568;
+        --btn-text: #e2e8f0;
+        --btn-active-day-bg: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+        --btn-active-timeslot-bg: linear-gradient(135deg, #4c51bf 0%, #6b46c1 100%);
+        --current-selection-bg: linear-gradient(135deg, #2f855a 0%, #276749 100%);
+        --current-selection-text: #e2e8f0;
+        --table-bg: #2d3748;
+        --table-border: #4a5568;
+        --th-bg: linear-gradient(135deg, #3b4a6b 0%, #4a6a8a 100%);
+        --th-text: #e2e8f0;
+        --td-bg: #1a202c;
+        --td-hover-bg: #2c3e50;
+        --time-column-bg: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+        --time-column-text: #e2e8f0;
+        --student-name-text: #cbd5e0;
+        --student-name-clickable-text: #63b3ed;
+        --student-name-clickable-hover-text: #90cdf4;
+        --empty-cell-text: #a0aec0;
+        --modal-content-bg: #2d3748;
+        --modal-text: #e2e8f0;
+        --input-editing-bg: #4a5568;
+        --input-editing-border: #63b3ed;
+        --input-editing-text: #e2e8f0;
+        --stats-bg: #1a202c;
+        --stats-header-text: #a0aec0;
+        --stat-item-bg: #2d3748;
+        --stat-item-text: #cbd5e0;
+        --export-section-bg: #1a202c;
+        --export-section-border: #4a5568;
+        --bed-header-bg: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+        --export-btn-bg: linear-gradient(135deg, #2f855a 0%, #276749 100%);
+        --edit-btn-edit-bg: #2f855a;
+        --edit-btn-save-bg: #3182ce;
+        --edit-btn-cancel-bg: #c53030;
+        --edit-btn-text: #e2e8f0;
+        --theme-toggle-btn-bg: #bbb;
+        --theme-toggle-btn-text: #333;
+        --theme-toggle-btn-hover-bg: #ddd;
       }
 
       .container {
         max-width: 1600px;
         margin: 0 auto;
-        background: white;
+        background: var(--container-bg);
         border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: var(--container-shadow);
         overflow: hidden;
       }
 
       .header {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        color: white;
+        background: var(--header-bg);
+        color: var(--header-text);
         padding: 20px;
         text-align: center;
       }
@@ -41,9 +140,9 @@
       }
 
       .controls {
-        background: #f8f9fa;
+        background: var(--controls-bg);
         padding: 20px;
-        border-bottom: 2px solid #e9ecef;
+        border-bottom: 2px solid var(--controls-border);
       }
 
       .day-selector {
@@ -67,8 +166,8 @@
         padding: 12px 24px;
         border: none;
         border-radius: 25px;
-        background: #6c757d;
-        color: white;
+        background: var(--btn-bg);
+        color: var(--btn-text);
         cursor: pointer;
         transition: all 0.3s ease;
         font-weight: bold;
@@ -82,19 +181,19 @@
       }
 
       .day-btn.active {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        background: var(--btn-active-day-bg);
       }
 
       .time-slot-btn.active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--btn-active-timeslot-bg);
       }
 
       .current-selection {
         text-align: center;
         margin: 15px 0;
         padding: 10px;
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        color: white;
+        background: var(--current-selection-bg);
+        color: var(--current-selection-text);
         border-radius: 10px;
         font-weight: bold;
         font-size: 1.2em;
@@ -117,20 +216,20 @@
       }
 
       .edit-btn.edit {
-        background: #28a745;
-        color: white;
+        background: var(--edit-btn-edit-bg);
+        color: var(--edit-btn-text);
       }
 
       .edit-btn.save {
-        background: #007bff;
-        color: white;
+        background: var(--edit-btn-save-bg);
+        color: var(--edit-btn-text);
       }
 
       .edit-btn.cancel {
-        background: #dc3545;
-        color: white;
+        background: var(--edit-btn-cancel-bg);
+        color: var(--edit-btn-text);
       }
-
+      
       .edit-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -144,25 +243,25 @@
       table {
         width: 100%;
         border-collapse: collapse;
-        background: white;
+        background: var(--table-bg);
         border-radius: 10px;
-        overflow: hidden;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         min-width: 800px;
+        border: 2px solid var(--table-border);
       }
 
       th,
       td {
         padding: 15px 10px;
         text-align: center;
-        border: 2px solid #dee2e6;
+        border: 2px solid var(--table-border);
         position: relative;
         vertical-align: middle;
       }
 
       th {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: var(--th-bg);
+        color: var(--th-text);
         font-weight: bold;
         font-size: 1.1em;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -170,27 +269,24 @@
 
       td {
         background: #f8f9fa;
+        background: var(--td-bg);
+        color: var(--student-name-text);
         transition: all 0.3s ease;
         min-height: 60px;
         height: 60px;
       }
 
       td:hover {
-        background: #e3f2fd;
+        background: var(--td-hover-bg);
         transform: scale(1.02);
       }
 
       .time-column {
-        background: linear-gradient(
-          135deg,
-          #4facfe 0%,
-          #00f2fe 100%
-        ) !important;
-        color: white;
+        background: var(--time-column-bg) !important;
+        color: var(--time-column-text);
         font-weight: bold;
         font-size: 1.2em;
         width: 120px;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
       }
 
       .student-cell {
@@ -202,13 +298,14 @@
 
       .student-cell.editing input {
         width: 100%;
-        border: 2px solid #007bff;
-        background: #fff3cd;
+        border: 2px solid var(--input-editing-border);
+        background: var(--input-editing-bg);
+        color: var(--input-editing-text);
         padding: 8px;
         border-radius: 5px;
         text-align: center;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 500;        
       }
 
       .student-info-container {
@@ -228,10 +325,10 @@
       .student-name-clickable {
         cursor: pointer;
         text-decoration: underline;
-        color: #007bff;
+        color: var(--student-name-clickable-text);
       }
       .student-name-clickable:hover {
-        color: #0056b3;
+        color: var(--student-name-clickable-hover-text);
       }
 
       /* Modal Styles */
@@ -247,20 +344,28 @@
         background-color: rgba(0,0,0,0.5);
       }
       .modal-content {
-        background-color: #fefefe;
+        background-color: var(--modal-content-bg);
+        color: var(--modal-text);
         margin: 15% auto;
         padding: 25px;
         border: 1px solid #888;
         width: 80%;
         max-width: 500px;
         border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);        
       }
       .close-button {
         color: #aaa;
         float: right;
         font-size: 28px;
         font-weight: bold;
+      }
+      body.dark-mode .close-button {
+        color: #ccc;
+      }
+      body.dark-mode .close-button:hover,
+      body.dark-mode .close-button:focus {
+        color: #fff;
       }
       .close-button:hover,
       .close-button:focus {
@@ -269,40 +374,46 @@
         cursor: pointer;
       }
 
+      #modalStudentNotes {
+        width: 100%;
+        margin-top: 5px;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid var(--table-border);
+        background-color: var(--td-bg);
+        color: var(--modal-text);
+      }
+
       .empty-cell {
-        color: #6c757d;
+        color: var(--empty-cell-text);
         font-style: italic;
         opacity: 0.7;
       }
 
       .bed-header {
-        background: linear-gradient(
-          135deg,
-          #ff6b6b 0%,
-          #ee5a52 100%
-        ) !important;
+        background: var(--bed-header-bg) !important;
         width: 150px;
       }
 
       .student-name {
         display: block;
         font-weight: bold;
-        color: #2c3e50;
+        color: var(--student-name-text);
         line-height: 1.3;
         word-break: break-word;
       }
 
       .export-section {
-        background: #f8f9fa;
+        background: var(--export-section-bg);
         padding: 20px;
-        border-top: 2px solid #e9ecef;
+        border-top: 2px solid var(--export-section-border);
         text-align: center;
       }
 
       .export-btn {
         padding: 12px 30px;
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        color: white;
+        background: var(--export-btn-bg);
+        color: var(--btn-text); /* Assuming export buttons share text color with general buttons */
         border: none;
         border-radius: 25px;
         cursor: pointer;
@@ -317,7 +428,7 @@
       }
 
       .stats {
-        background: #e9ecef;
+        background: var(--stats-bg);
         padding: 15px;
         margin: 20px;
         border-radius: 10px;
@@ -325,7 +436,7 @@
       }
 
       .stats h3 {
-        color: #495057;
+        color: var(--stats-header-text);
         margin-bottom: 10px;
       }
 
@@ -333,10 +444,25 @@
         display: inline-block;
         margin: 0 15px;
         padding: 8px 15px;
-        background: white;
+        background: var(--stat-item-bg);
         border-radius: 15px;
         font-weight: bold;
-        color: #495057;
+        color: var(--stat-item-text);
+      }
+
+      #themeToggleBtn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        background: var(--theme-toggle-btn-bg);
+        color: var(--theme-toggle-btn-text);
+        margin-left: 10px;
+      }
+      #themeToggleBtn:hover {
+        background: var(--theme-toggle-btn-hover-bg);
       }
 
       @media (max-width: 768px) {
@@ -367,6 +493,7 @@
     <div class="container">
       <div class="header">
         <h1>🧘‍♀️ Turnos Pilates Reformer</h1>
+        <button id="themeToggleBtn" onclick="toggleTheme()">🌓 Alternar Tema</button>
         <p>Sistema de horarios por horas - 6 camas disponibles</p>
       </div>
 
@@ -466,8 +593,8 @@
         <h2 id="modalStudentName">Detalles del Alumno</h2>
         <p><strong>Profesor/a:</strong> <span id="modalProfessorName"></span></p>
         <p><strong>Asistencia:</strong> <span id="modalAttendanceStatus"></span></p>
-        <label for="modalStudentNotes"><strong>Notas:</strong></label>
-        <textarea id="modalStudentNotes" rows="3" style="width: 100%; margin-top: 5px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+        <label for="modalStudentNotes" style="display: block; margin-bottom: 5px;"><strong>Notas:</strong></label>
+        <textarea id="modalStudentNotes" rows="3"></textarea>
         <button onclick="saveStudentNotes()" style="margin-top: 10px; padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar Notas</button>
       </div>
     </div>
@@ -533,7 +660,7 @@
           "morning": {
             "08:00 - 09:00": ["Marcia Monjes", "Alicia Aracha", "", "Florencia Alvarez", "Micaela", "Bianca"],
             "09:00 - 10:00": ["Marisa O", "Patricia Viola", "Daniela", "Pamela", "Lucia", "Lucia Mariosini"],
-            "10:00 - 11:00": ["Marta Lamuzzo", "Daniel", "Juan Carlos", "Silvia Amador", "Judith", "Ana"],
+            "10:00 - 11:00": ["Marta Lamuzzo", "Daniel Pelado Flaco", "Juan Carlos", "Silvia Amador", "Judith", "Ana"],
             "11:00 - 12:00": ["Silvia Juarez", "Jesica", "Florencia Cerbetto", "Silvana Rinaldi", "Monica M", "Fanny"]
           },
           "afternoon": {
@@ -574,6 +701,23 @@
       let copiedSchedule = null;
       let currentModalInfo = {}; // To store info for saving notes in modal
 
+      // --- Persistencia y Tema ---
+      function saveScheduleToLocalStorage() {
+        localStorage.setItem('pilatesScheduleData', JSON.stringify(scheduleData));
+        console.log("Horario guardado en LocalStorage.");
+      }
+
+      function loadScheduleFromLocalStorage() {
+        const savedData = localStorage.getItem('pilatesScheduleData');
+        if (savedData) {
+          try {
+            scheduleData = JSON.parse(savedData);
+            console.log("Horario cargado desde LocalStorage.");
+          } catch (e) {
+            console.error("Error al parsear datos de LocalStorage:", e);
+          }
+        }
+      }
       // Helper function to transform old data structure to new one
       function transformScheduleData(data) {
         const newData = {};
@@ -583,7 +727,7 @@
             newData[day][category] = {};
             for (const timeSlot in data[day][category]) {
               const studentsArray = data[day][category][timeSlot];
-              newData[day][category][timeSlot] = {
+              newData[day][category][timeSlot] = { // Ensure this structure matches everywhere
                 professor: "Prof. Asignado", // Default professor
                 students: studentsArray.map(studentName => ({
                   name: studentName || "",
@@ -612,11 +756,6 @@
           }
         }
         return false; // Default to false if data is empty or structure is unexpected
-      }
-
-      if (isOldFormat(scheduleData)) {
-        console.log("Transforming schedule data to new format...");
-        scheduleData = transformScheduleData(scheduleData);
       }
 
       function getCategoryForTime(timeString) {
@@ -671,16 +810,33 @@
         timeSlots.forEach((time) => {
           const row = table.insertRow();
           const timeCell = row.insertCell();
-          timeCell.innerHTML = `<strong>${time}</strong>`;
           timeCell.className = "time-column";
+          
+          const category = getCategoryForTime(time);
+          const currentProfessor = scheduleData[currentDay]?.[category]?.[time]?.professor || "Prof. Asignado";
+
+          if (isEditing) {
+            timeCell.innerHTML = `
+              <div><strong>${time}</strong></div>
+              <div style="margin-top: 5px;">
+                <input type="text" 
+                       value="${currentProfessor}" 
+                       onchange="updateProfessor('${time}', this.value)" 
+                       placeholder="Profesor/a" 
+                       style="width: 90%; font-size: 0.9em; padding: 3px; border-radius:3px; border:1px solid var(--input-editing-border); background:var(--input-editing-bg); color:var(--input-editing-text);">
+              </div>
+            `;
+          } else {
+            timeCell.innerHTML = `<strong>${time}</strong><br><small style="font-weight:normal; font-size:0.9em;">Prof: ${currentProfessor}</small>`;
+          }
 
           for (let bed = 1; bed <= 6; bed++) {
             const cell = row.insertCell();
-            const category = getCategoryForTime(time);
-            
+            // const category = getCategoryForTime(time); // Category already defined above
+
             const slotData = scheduleData[currentDay]?.[category]?.[time];
             const studentData = slotData?.students?.[bed - 1] || { name: "", attended: false, notes: "" };
-            const studentName = studentData.name;
+            const studentName = studentData.name || ""; // Ensure studentName is not undefined
             const studentAttended = studentData.attended;
 
             if (isEditing) {
@@ -710,6 +866,23 @@
         updateStats();
       }
 
+      // Actualizar profesor
+      function updateProfessor(time, newName) {
+        const category = getCategoryForTime(time);
+        if (!scheduleData[currentDay]) scheduleData[currentDay] = {};
+        if (!scheduleData[currentDay][category]) scheduleData[currentDay][category] = {};
+
+        if (!scheduleData[currentDay][category][time]) {
+            scheduleData[currentDay][category][time] = {
+                professor: newName.trim(),
+                students: Array(6).fill(null).map(() => ({ name: "", attended: false, notes: "" }))
+            };
+        } else {
+            scheduleData[currentDay][category][time].professor = newName.trim();
+        }
+        // No redraw needed here, changes will be saved with saveChanges()
+      }
+
       // Actualizar celda
       function updateCell(time, bedIndex, value) {
         const category = getCategoryForTime(time);
@@ -717,7 +890,7 @@
         if (!scheduleData[currentDay][category][time]) {
             scheduleData[currentDay][category][time] = {
                 professor: "Prof. Asignado",
-                students: Array(6).fill(null).map(() => ({ name: "", attended: false, notes: "" }))
+                students: Array(6).fill(null).map(() => ({ name: "", attended: false, notes: ""})),
             };
         } else if (!scheduleData[currentDay][category][time].students) {
              scheduleData[currentDay][category][time].students = Array(6).fill(null).map(() => ({ name: "", attended: false, notes: "" }));
@@ -813,6 +986,7 @@
       function updateAttendance(day, category, time, bedIndex, isAttended) {
         if (scheduleData[day]?.[category]?.[time]?.students?.[bedIndex]) {
           scheduleData[day][category][time].students[bedIndex].attended = isAttended;
+          saveScheduleToLocalStorage();
           updateStats(); // Update stats after attendance change
         } else {
           console.error("Error updating attendance: Student data not found.", {day, category, time, bedIndex});
@@ -844,6 +1018,7 @@
         document.querySelector(".edit-btn.cancel").style.display = "none";
 
         createTable();
+        saveScheduleToLocalStorage();
         alert("✅ Cambios guardados correctamente");
       }
 
@@ -877,8 +1052,10 @@
           const timeSlotsToClear = getTimeSlotsForPeriod(currentTimeSlot);
           timeSlotsToClear.forEach(slot => {
               const category = getCategoryForTime(slot);
-              if (scheduleData[currentDay]?.[category]?.[slot]) {
+              if (scheduleData[currentDay]?.[category]?.[slot]?.students) {
                   scheduleData[currentDay][category][slot].students = new Array(6).fill(null).map(() => ({ name: "", attended: false, notes: "" }));
+                  // Decide if professor should be reset too
+                  // scheduleData[currentDay][category][slot].professor = "Prof. Asignado";
                   // Optionally reset professor: scheduleData[currentDay][category][slot].professor = "Prof. Asignado";
               } else if (scheduleData[currentDay]?.[category]) {
                   scheduleData[currentDay][category][slot] = {
@@ -887,6 +1064,7 @@
                   };
               }
           });
+          saveScheduleToLocalStorage();
           createTable();
         }
       }
@@ -947,6 +1125,7 @@
                 importedData = transformScheduleData(importedData);
               }
               scheduleData = importedData;
+              saveScheduleToLocalStorage();
               createTable();
               alert("✅ Datos importados correctamente");
             } catch (error) {
@@ -991,8 +1170,26 @@
         const { day, category, time, bedIndex } = currentModalInfo;
         if (day && scheduleData[day]?.[category]?.[time]?.students?.[bedIndex]) {
           scheduleData[day][category][time].students[bedIndex].notes = document.getElementById("modalStudentNotes").value;
+          saveScheduleToLocalStorage();
           alert("Notas guardadas.");
           closeStudentModal();
+        }
+      }
+
+      // Theme toggle functions
+      function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('pilatesTheme', 'dark');
+        } else {
+            localStorage.setItem('pilatesTheme', 'light');
+        }
+      }
+
+      function loadThemePreference() {
+        const savedTheme = localStorage.getItem('pilatesTheme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
         }
       }
 
@@ -1006,9 +1203,17 @@
 
       // Inicializar aplicación
       document.addEventListener("DOMContentLoaded", function () {
+        loadScheduleFromLocalStorage();
+        if (isOldFormat(scheduleData)) { // Check initial or loaded data
+            console.log("Transformando datos a nuevo formato...");
+            scheduleData = transformScheduleData(scheduleData);
+            saveScheduleToLocalStorage(); // Save transformed data immediately
+        }
+        loadThemePreference();
         updateCurrentSelection();
         createTable();
       });
+
     </script>
   </body>
 </html>
